@@ -1,6 +1,8 @@
 const { OK, INTERNAL_SERVER_ERROR } = require('http-status');
 
-module.exports = ({ logger  }) => {
+let lastTried = Date.now();
+
+module.exports = ({  db, logger }) => {
     const live = async ctx => {
         ctx.status = OK;
         ctx.body = {
@@ -9,14 +11,18 @@ module.exports = ({ logger  }) => {
     };
 
     const ready = async ctx => {
-        // const mongoIsUp = mongoose.connection.readyState > 0;
-        // ctx.status = mongoIsUp ? OK : INTERNAL_SERVER_ERROR;
-        // ctx.body = {
-        //     status: mongoIsUp ? 'Looking good ;)' : 'Check mongo connection :('
-        // };
-        ctx.status = OK;
+        const dbIsUp = db.sequelize.connectionManager.pool.size > 0;
+        ctx.status = dbIsUp ? OK : INTERNAL_SERVER_ERROR;
         ctx.body = {
-            status: 'Ok Continue'
+            status: dbIsUp ? 'Looking good ;)' : 'Check db connection :('
+        };
+        if (!dbIsUp && (lastTried - Date.now()) < 10000) {
+            lastTried = Date.now();
+            try {
+                await db.sequelize.authenticate();
+            } catch(err) {
+                logger.error(err)
+            }
         }
     };
 

@@ -1,6 +1,6 @@
 const { createContainer, asFunction } = require('awilix');
 
-// const mongooseBuilder = require('./infrastructure/database/mongoose');
+const dbBuilder = require('./models');
 
 const serverBuilder = require('./server');
 // const workerBuilder = require('./application/worker/worker');
@@ -28,7 +28,7 @@ const container = createContainer().register({
 
     // messageBus: asFunction(messageBusBuilder).singleton(),
 
-    // mongoose: asFunction(mongooseBuilder).singleton(),
+    db: asFunction(dbBuilder).singleton(),
     // jobRepository: asFunction(jobRepositoryBuilder).singleton(),
     // jobScheduler: asFunction(jobSchedulerBuilder).singleton()
 });

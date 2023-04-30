@@ -1,4 +1,4 @@
-version: "3.3"
+version: "3.4"
 
 services:
 
@@ -20,10 +20,9 @@ services:
     test-backend:
         deploy:
             replicas: 1 # Increase on deploy
-        build: .
-        environment:
-#            - "BIN_PATH=src/index.js"
-            - "BIN_PATH=node_modules/nodemon/bin/nodemon.js --inspect=0.0.0.0:9229 src/index.js"
+        build:
+            context: .
+            target: "development"
         env_file: .env_pokedex
         labels:
             - "traefik.enable=true"

@@ -28,10 +28,15 @@ module.exports = () => {
         internalLogger.debug(lightgray, prefix(), ...args);
     };
 
+    const log = (message, ...args) => {
+        internalLogger.info(message, ...args);
+    }
+
     return {
         info,
         warn,
         error,
-        debug
+        debug,
+        log
     };
 };

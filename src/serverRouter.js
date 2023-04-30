@@ -5,8 +5,8 @@ module.exports = ({ healthcheckController }) => {
 
 
     // Healthcheck
-    router.get('/healthcheck', healthcheckController.live);
-    router.get('/readiness', healthcheckController.ready);
+    router.get('/healthcheck', healthcheckController.live); //check if app has up
+    router.get('/readiness', healthcheckController.ready); //check if app has ready to work
 
     router.get('/', healthcheckController.live);
 
