@@ -8,7 +8,7 @@ A Pokedex Api
 
 2 - Go to clone directory and run make setup
 
-3 - Access: make open
+3 - Access: http://pokedex.localhost:8282
 
 ## Briefing
 > Esta API deverá seguir o mínimo de práticas RESTful e conter listagens, busca, paginação e filtros. 
@@ -76,3 +76,8 @@ fine
 ### Help
 
 ``run $ make``
+
+
+### Troubleshoot
+
+Ports 8080, 8282 need not before used

@@ -6,4 +6,5 @@ help: # Show help for each of the Makefile recipes.
 
 .PHONY: setup
 setup: # Setup tools required for local development.
-	docker-compose up -d test_backend
+	docker-compose up -d
+
