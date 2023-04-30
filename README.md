@@ -58,6 +58,7 @@ A Pokedex Api
 | #RFN 02 | 80% Coverage               |
 | #RFN 03 | Stress Test for 10k req/s  |
 | #RFN 04 | Log utility to check stats |
+| #RFN 05 | Expose API docs Swagger    |
 
 
 ## The Infra Diagram
@@ -80,4 +81,4 @@ fine
 
 ### Troubleshoot
 
-Ports 8080, 8282 need not before used
+Ports 8080, 8282, 5432 need not before used
