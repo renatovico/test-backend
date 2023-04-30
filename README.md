@@ -81,4 +81,11 @@ fine
 
 ### Troubleshoot
 
-Ports 8080, 8282, 5432 need not before used
+Ports 8080, 8282 need not before used
+
+- 9229 need only in debug mode
+
+### NodeJS Template
+
+- https://github.com/brunofurmon/job-scheduler/tree/main
+> In The past, partner with Bruno this architecture, :pirate: boilerplate template

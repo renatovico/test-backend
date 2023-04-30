@@ -17,19 +17,33 @@ services:
         volumes:
             - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
-    pokedex:
+    test-backend:
         deploy:
-            replicas: 2
-        image: "traefik/whoami"
+            replicas: 1 # Increase on deploy
+        build: .
+        environment:
+#            - "BIN_PATH=src/index.js"
+            - "BIN_PATH=node_modules/nodemon/bin/nodemon.js --inspect=0.0.0.0:9229 src/index.js"
+        env_file: .env_pokedex
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.pokedex.rule=Host(`pokedex.localhost`)"
-            - "traefik.http.routers.pokedex.entrypoints=web"
+            - "traefik.http.routers.test-backend.rule=Host(`pokedex.localhost`)"
+            - "traefik.http.routers.test-backend.entrypoints=web"
+        expose:
+            - "80"
+        ports:
+            - '9229:9229'
+        depends_on:
+            -   postgres
+        links:
+            - postgres
+        volumes:
+            - "./:/usr/app"
     postgres:
         image: postgres:15.2-alpine
         env_file: .env_postgres
-        ports:
-            - '5432:5432'
+        expose:
+            - "5432"
         volumes:
             - db:/var/lib/postgresql/data
 

@@ -1,0 +1,30 @@
+{
+  "name": "test-backend",
+  "description": "A Pokedex Api",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage --detectOpenHandles --passWithNoTests"
+  },
+  "author": "Renato Viço",
+  "license": "ISC",
+  "engines": {
+    "npm": ">=9.6.4",
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "awilix": "^8.0.1",
+    "awilix-koa": "^9.0.0",
+    "http-status": "^1.6.2",
+    "koa": "^2.14.2",
+    "koa-body": "^6.0.1",
+    "koa-bodyparser": "^4.4.0",
+    "koa-compress": "^5.1.1",
+    "koa-helmet": "^7.0.2",
+    "koa-router": "^12.0.0",
+    "sequelize": "^6.31.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
