@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "start-dev": "node --inspect=0.0.0.0:9229 src/index.js",
-    "test": "jest",
-    "testFull": "jest --coverage --detectOpenHandles",
+    "test": "jest --watch",
+    "test-full": "jest",
     "eslint": "eslint src",
     "prettier": "prettier src"
   },

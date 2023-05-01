@@ -8,7 +8,7 @@ echo $NODE_ENV
 echo "start"
 
 if [ $NODE_ENV = "development" ]; then
-  npx nodemon --watch 'src/' --exec '(npm run test || true) && npm run start-dev'
+  npm run test & npx nodemon --watch 'src/' --exec 'npm run start-dev'
 else
   npm run start
 fi
