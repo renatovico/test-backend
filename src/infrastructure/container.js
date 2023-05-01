@@ -1,15 +1,15 @@
 const { createContainer, asFunction } = require('awilix');
 
-const dbBuilder = require('./models');
+const dbBuilder = require('../models');
 
 const serverBuilder = require('./server');
 // const workerBuilder = require('./application/worker/worker');
 
-const healthcheckControllerBuilder = require('./controllers/healthcheckController');
+const healthcheckControllerBuilder = require('../controllers/healthcheckController');
 // const heavyControllerBuilder = require('./controllers/heavyController');
 
 const loggerBuilder = require('./logger');
-const router = require('./serverRouter');
+const router = require('./router');
 
 // const messageBusBuilder = require('./infrastructure/messaging/nsqMessageBus');
 

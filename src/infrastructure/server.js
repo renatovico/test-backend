@@ -3,15 +3,19 @@ const compress = require('koa-compress');
 const helmet = require('koa-helmet');
 const bodyParser = require('koa-bodyparser');
 const util = require('util');
+const koaSwaggerUi = require('koa2-swagger-ui');
+const yamljs = require('yamljs');
 
 const { SERVER_PORT } = process.env;
 
 module.exports = ({ logger, router }) => {
     const app = new Koa();
+    const spec = yamljs.load('./openapi.yaml');
 
     app.use(compress())
-            .use(helmet())
-            .use(bodyParser({ enableTypes: ['json'], jsonLimit: '1mb' }))
+            .use(helmet({
+                contentSecurityPolicy: false, //FOR A REAL API THIS NEED ON
+            })).use(bodyParser({ enableTypes: ['json'], jsonLimit: '1mb' }))
             .use(async (ctx, next) => {
                 const start = Date.now();
                 await next();
@@ -24,8 +28,10 @@ module.exports = ({ logger, router }) => {
                     logger.info(message);
                 }
 
-            })
-            .use(router.routes());
+            }).use(koaSwaggerUi.koaSwagger({
+                routePrefix: '/swagger', // host at /swagger instead of default /docs
+                swaggerOptions: { spec },
+            })).use(router.routes());
 
     return {
         app,
