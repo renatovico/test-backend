@@ -28,7 +28,7 @@ const container = createContainer().register({
 
     // messageBus: asFunction(messageBusBuilder).singleton(),
 
-    db: asFunction(dbBuilder).singleton(),
+    db: asFunction(dbBuilder).singleton()
     // jobRepository: asFunction(jobRepositoryBuilder).singleton(),
     // jobScheduler: asFunction(jobSchedulerBuilder).singleton()
 });

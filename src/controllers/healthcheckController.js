@@ -6,7 +6,7 @@ module.exports = ({  db, logger }) => {
     const live = async ctx => {
         ctx.status = OK;
         ctx.body = {
-            status: 'Looking good ;)'
+            status: 'Looking good ;)1'
         };
     };
 

@@ -1,7 +1,8 @@
-'use strict';
+
 const {
   Model
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Pokemon extends Model {
     /**
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     evolved: DataTypes.BOOLEAN
   }, {
     sequelize,
-    modelName: 'Pokemon',
+    modelName: 'Pokemon'
   });
   return Pokemon;
 };

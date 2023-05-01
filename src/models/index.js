@@ -7,9 +7,13 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const { Sequelize } = require('sequelize');
-let { POSTGRES_CONNECTIONPOOL } = process.env;
+let { POSTGRES_CONNECTIONPOOL, POSTGRES_ACQUIRETIME, POSTGRES_IDLETIME } = process.env;
 POSTGRES_CONNECTIONPOOL = parseInt(POSTGRES_CONNECTIONPOOL, 10);
-POSTGRES_CONNECTIONPOOL ||= 10;
+POSTGRES_CONNECTIONPOOL ||= 20;
+POSTGRES_ACQUIRETIME = parseInt(POSTGRES_ACQUIRETIME, 10);
+POSTGRES_ACQUIRETIME ||= 30000;
+POSTGRES_IDLETIME = parseInt(POSTGRES_IDLETIME, 10);
+POSTGRES_IDLETIME ||= 10000;
 
 module.exports = ({logger}) => {
     const sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -19,8 +23,8 @@ module.exports = ({logger}) => {
         pool: {
             max: POSTGRES_CONNECTIONPOOL,
             min: 1,
-            acquire: 30000, //The maximum time, in milliseconds, that pool will try to get connection before  error
-            idle: 10000 //The maximum time, in milliseconds, that a connection can be idle before being released.
+            acquire: POSTGRES_ACQUIRETIME, //The maximum time, in milliseconds, that pool will try to get connection before  error
+            idle: POSTGRES_IDLETIME //The maximum time, in milliseconds, that a connection can be idle before being released.
         }
     });
 

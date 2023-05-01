@@ -8,9 +8,7 @@ module.exports = () => {
     const red = '\x1b[31m%s\x1b[0m';
     const lightgray = '\x1b[37m%s\x1b[0m';
 
-    const prefix = () => {
-        return `  ${APP_PREFIX}:(${new Date().toISOString()}):`;
-    };
+    const prefix = () => `  ${APP_PREFIX}:(${new Date().toISOString()}):`;
 
     const info = (...args) => {
         internalLogger.info(cyan, prefix(), ...args);

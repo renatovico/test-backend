@@ -5,10 +5,11 @@ module.exports = ({ healthcheckController }) => {
 
 
     // Healthcheck
-    router.get('/healthcheck', healthcheckController.live); //check if app has up
-    router.get('/readiness', healthcheckController.ready); //check if app has ready to work
+    router.get('/healthcheck', healthcheckController.live); // check if app has up
+    router.get('/readiness', healthcheckController.ready); // check if app has ready to work
 
     router.get('/', healthcheckController.live);
+
 
     // Heavy Job
     // router.post('/jobs/heavy', heavyController.publishHeavyJob);

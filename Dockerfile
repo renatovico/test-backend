@@ -14,15 +14,9 @@ FROM node:20 as base
 
 FROM base as development
     ENV NODE_ENV development
-    ENV BIN_PATH "node_modules/nodemon/bin/nodemon.js --inspect=0.0.0.0:9229 src/index.js"
-
     ENTRYPOINT ["./Dockerfile_entrypoint.sh"]
 
 FROM base as production
     ENV NODE_ENV production
-    ENV BIN_PATH "src/index.js"
-
     COPY . $APPDIR
-
     ENTRYPOINT ["./Dockerfile_entrypoint.sh"]
-    #CMD $BIN_PATH
