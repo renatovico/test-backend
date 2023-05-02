@@ -5,11 +5,15 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
+    "importer": "node src/importer.js",
     "start-dev": "node --inspect=0.0.0.0:9229 src/index.js",
     "test": "jest --watch",
     "test-full": "jest",
     "eslint": "eslint src",
-    "prettier": "prettier src"
+    "prettier": "prettier src",
+    "db:create": "npx sequelize-cli db:create --config=./src/config/config.json --migrations-path=./src/migrations --seeders-path=./src/seeders --models-path=./src/models",
+    "db:migrate:up": "npx sequelize-cli db:migrate --config=./src/config/config.json --migrations-path=./src/migrations --seeders-path=./src/seeders --models-path=./src/models",
+    "db:migrate:undo": "npx sequelize-cli db:migrate:undo --config=./src/config/config.json --migrations-path=./src/migrations --seeders-path=./src/seeders --models-path=./src/models"
   },
   "author": "Renato Viço",
   "license": "ISC",
@@ -31,6 +35,7 @@
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.31.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

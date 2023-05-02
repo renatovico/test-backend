@@ -1,8 +1,8 @@
 #!/bin/sh
 
 npm install
-npx sequelize-cli db:create --config=./src/config/config.json --migrations-path=./src/migrations --seeders-path=./src/seeders --models-path=./src/models
-npx sequelize-cli db:migrate --config=./src/config/config.json --migrations-path=./src/migrations --seeders-path=./src/seeders --models-path=./src/models
+npm run db:create
+npm run migrate:up
 
 echo $NODE_ENV
 echo "start"

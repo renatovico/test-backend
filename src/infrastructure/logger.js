@@ -1,5 +1,12 @@
-const { APP_PREFIX } = process.env;
-const internalLogger = console;
+const { APP_PREFIX, LOG_LEVEL } = process.env;
+const internalLogger = console; //POSSIBLE CHANGE TO ANOTHER IMPLEMENTATION
+
+const LOG_LEVEL_INFO = "INFO";
+const LOG_LEVEL_DEBUG = "DEBUG";
+
+let log_level = LOG_LEVEL;
+log_level ||= LOG_LEVEL_INFO;
+log_level = log_level.toUpperCase();
 
 module.exports = () => {
     // Colors as seen on: https://gist.github.com/abritinthebay/d80eb99b2726c83feb0d97eab95206c4
@@ -26,8 +33,11 @@ module.exports = () => {
         internalLogger.debug(lightgray, prefix(), ...args);
     };
 
-    const log = (message, ...args) => {
-        internalLogger.info(message, ...args);
+    const dbLog = (message, ...args) => {
+        // Database Log is expensive for run in "normal fly"
+        if (log_level === LOG_LEVEL_DEBUG ) {
+            internalLogger.info(message, ...args);
+        }
     }
 
     return {
@@ -35,6 +45,6 @@ module.exports = () => {
         warn,
         error,
         debug,
-        log
+        dbLog
     };
 };

@@ -19,7 +19,7 @@ module.exports = ({logger}) => {
     const sequelize = new Sequelize(config.database, config.username, config.password, {
         host: config.host,
         dialect: 'postgres',
-        logging: logger.log,
+        logging: logger.dbLog,
         pool: {
             max: POSTGRES_CONNECTIONPOOL,
             min: 1,
@@ -53,6 +53,16 @@ module.exports = ({logger}) => {
 
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
+
+    db.closeConnection = async () => {
+        try {
+            logger.debug('Close connections');
+            await db.sequelize.connectionManager.close();
+        } catch(err) {
+            logger.error(`Error on close connection: ${err} - ${err.stack}`);
+        }
+
+    }
 
     return db;
 };

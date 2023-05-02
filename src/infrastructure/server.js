@@ -12,23 +12,26 @@ module.exports = ({ logger, router }) => {
     const app = new Koa();
     const spec = yamljs.load('./openapi.yaml');
 
+    const logMessage = async (ctx, next) => {
+        const start = Date.now();
+        await next();
+        const ms = Date.now() - start;
+        const message = `${ctx.method} ${ctx.url} - ${ms}ms - ${ctx.status}`;
+
+        if (ctx.status < 200 || ctx.status >= 500) {
+            logger.error(message);
+        } else {
+            logger.info(message);
+        }
+
+    }
+
     app.use(compress())
             .use(helmet({
                 contentSecurityPolicy: false, //FOR A REAL API THIS NEED ON
             })).use(bodyParser({ enableTypes: ['json'], jsonLimit: '1mb' }))
-            .use(async (ctx, next) => {
-                const start = Date.now();
-                await next();
-                const ms = Date.now() - start;
-                const message = `${ctx.method} ${ctx.url} - ${ms}ms - ${ctx.status}`;
-
-                if (ctx.status < 200 || ctx.status >= 500) {
-                    logger.error(message);
-                } else {
-                    logger.info(message);
-                }
-
-            }).use(koaSwaggerUi.koaSwagger({
+            .use(logMessage)
+            .use(koaSwaggerUi.koaSwagger({
                 routePrefix: '/swagger', // host at /swagger instead of default /docs
                 swaggerOptions: { spec },
             })).use(router.routes());
