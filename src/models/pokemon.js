@@ -11,36 +11,44 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
+            this.belongsTo(models.PokemonWeather, { foreignKey: 'weatherId' });
+            this.belongsTo(models.PokemonWeather, { as: 'secondaryWeather', foreignKey: 'secondaryWeatherId' });
+            this.belongsTo(models.PokemonKind, { foreignKey: 'kindId' });
+            this.belongsTo(models.PokemonKind, {  as: 'secondaryKind', foreignKey: 'secondaryKindId' });
         }
     }
     Pokemon.init({
         name: DataTypes.STRING,
-        pokedex_number: DataTypes.INTEGER,
-        family_kind: DataTypes.INTEGER,
-        attack_score: DataTypes.INTEGER,
-        defense_score: DataTypes.INTEGER,
-        stamina_score: DataTypes.INTEGER,
+        pokedexNumber: DataTypes.INTEGER,
+        familyKind: DataTypes.INTEGER,
+        attackScore: DataTypes.INTEGER,
+        defenseScore: DataTypes.INTEGER,
+        staminaScore: DataTypes.INTEGER,
+        totalScore: DataTypes.INTEGER, //My initial thought is use computed field of psql, but sequelize doesn't support
         generation: DataTypes.INTEGER,
-        evolution_stage: DataTypes.INTEGER,
+        evolutionStage: DataTypes.INTEGER,
         legendary: DataTypes.INTEGER,
         aquireable: DataTypes.INTEGER,
         raidable: DataTypes.INTEGER,
         hatchable: DataTypes.INTEGER,
-        combat_points_at_lvl_40: DataTypes.INTEGER,
-        combat_points_at_lvl_39: DataTypes.INTEGER,
+        combatPointsAtLvl40Score: DataTypes.INTEGER,
+        combatPointsAtLvl39Score: DataTypes.INTEGER,
         evolved: DataTypes.BOOLEAN,
-        cross_gen: DataTypes.BOOLEAN,
+        crossGen: DataTypes.BOOLEAN,
         spawns: DataTypes.BOOLEAN,
         regional: DataTypes.BOOLEAN,
         shiny: DataTypes.BOOLEAN,
         nest: DataTypes.BOOLEAN,
-        new_pokemon: DataTypes.BOOLEAN,
-        not_gettable: DataTypes.BOOLEAN,
-        future_evolve: DataTypes.BOOLEAN,
+        newPokemon: DataTypes.BOOLEAN,
+        notGettable: DataTypes.BOOLEAN,
+        futureEvolve: DataTypes.BOOLEAN,
     }, {
         sequelize,
         modelName: 'Pokemon'
     });
+
+
+
+
     return Pokemon;
 };

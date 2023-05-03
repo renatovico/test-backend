@@ -9,27 +9,65 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
+            weatherId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'PokemonWeathers',
+                    key: 'id'
+                }
+            },
+            secondaryWeatherId: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'PokemonWeathers',
+                    key: 'id'
+                },
+                defaultValue: null
+            },
+            kindId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'PokemonKinds',
+                    key: 'id'
+                }
+            },
+            secondaryKindId: {
+                type: Sequelize.INTEGER,
+                allowNull: true,
+                references: {
+                    model: 'PokemonKinds',
+                    key: 'id'
+                },
+                defaultValue: null
+            },
             name: {
                 type: Sequelize.STRING,
                 allowNull: false,
             },
-            pokedex_number: {
+            pokedexNumber: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            family_kind: {
+            familyKind: {
                 type: Sequelize.INTEGER,
                 allowNull: true,
             },
-            attack_score: {
+            attackScore: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            defense_score: {
+            defenseScore: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            stamina_score: {
+            staminaScore: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+            },
+            totalScore: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
@@ -37,7 +75,7 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            evolution_stage: {
+            evolutionStage: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
@@ -57,11 +95,11 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            combat_points_at_lvl_40: {
+            combatPointsAtLvl40Score: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            combat_points_at_lvl_39: {
+            combatPointsAtLvl39Score: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
@@ -69,7 +107,7 @@ module.exports = {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },
-            cross_gen: {
+            crossGen: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },
@@ -89,15 +127,15 @@ module.exports = {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },
-            new_pokemon: {
+            newPokemon: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },
-            not_gettable: {
+            notGettable: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },
-            future_evolve: {
+            futureEvolve: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
             },
@@ -108,10 +146,22 @@ module.exports = {
             updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE
-            }
+            },
+        });
+
+        await queryInterface.addConstraint('Pokemons', {
+            type: 'unique',
+            fields: ['name'],
+            name: 'unique_pokemon_name_constraint'
+        });
+
+        await queryInterface.addConstraint('Pokemons', {
+            type: 'unique',
+            fields: ['name', 'pokedexNumber'],
+            name: 'unique_pokemon_name_number_constraint'
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('Users');
+        await queryInterface.dropTable('Pokemons');
     }
 };

@@ -35,7 +35,7 @@ module.exports = () => {
 
     const dbLog = (message, ...args) => {
         // Database Log is expensive for run in "normal fly"
-        if (log_level === LOG_LEVEL_DEBUG ) {
+        if (log_level === LOG_LEVEL_DEBUG) {
             internalLogger.info(message, ...args);
         }
     }

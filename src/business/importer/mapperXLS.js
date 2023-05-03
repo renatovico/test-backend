@@ -30,19 +30,19 @@ module.exports = ({ logger, db }) => {
 //          Name: 'Bulbasaur', //String unique
         let name = row.Name; //check string
 //         'Pokedex Number': 1, //Only number unique
-        let pokedex_number = parseNumber(row['Pokedex Number']);
+        let pokedexNumber = parseNumber(row['Pokedex Number']);
 //         Generation: 1, //NUMBER
         let generation = parseNumber(row['Generation']);
 //         FamilyID: 1, //import but accept nulls
-        let family_kind = parseNumber(row['FamilyID'], true);
+        let familyKind = parseNumber(row['FamilyID'], true);
 //         ATK: 118, //attack integer
-        let attack_score = parseNumber(row['ATK']);
+        let attackScore = parseNumber(row['ATK']);
 //         DEF: 118, //defense integer
-        let defense_score = parseNumber(row['DEF']);
+        let defenseScore = parseNumber(row['DEF']);
 //         STA: 90, //stamina integer
-        let stamina_score = parseNumber(row['STA']);
+        let staminaScore = parseNumber(row['STA']);
 //         'Evolution Stage': 1, //integer need check EVOLVED, LOWER, blank
-        let evolution_stage = parseNumber(row['Evolution Stage'], false, {
+        let evolutionStage = parseNumber(row['Evolution Stage'], false, {
             'Evolved': 2,
             'Lower': 1,
             null: 0,
@@ -56,14 +56,16 @@ module.exports = ({ logger, db }) => {
         let raidable = parseNumber(row['Raidable']);
 //         Hatchable: 5, //integer
         let hatchable = parseNumber(row['Hatchable']);
-//         '100% CP @ 40': 981, //integer combat_points_at_lvl_40
-        let combat_points_at_lvl_40 = parseNumber(row['100% CP @ 40']);
-//         : 967 //integer combat_points_at_lvl_39
-        let combat_points_at_lvl_39 = parseNumber(row['100% CP @ 39']);
+//         '100% CP @ 40': 981, //integer combatPointsAtLvl40Score
+        let combatPointsAtLvl40Score = parseNumber(row['100% CP @ 40']);
+//         : 967 //integer combatPointsAtLvl39Score
+        let combatPointsAtLvl39Score = parseNumber(row['100% CP @ 39']);
+        // 'STAT TOTAL': 646,
+        let totalScore = parseNumber(row['STAT TOTAL']);
 //         Evolved: 0, //boolean
         let evolved = parseBoolean(row['Evolved']);
 //         'Cross Gen': 0, //boolean
-        let cross_gen = parseBoolean(row['Cross Gen']);
+        let crossGen = parseBoolean(row['Cross Gen']);
 //         Spawns: 1, //boolean
         let spawns = parseBoolean(row['Spawns']);
 //         Regional: 0, //boolean
@@ -73,46 +75,64 @@ module.exports = ({ logger, db }) => {
 //         Nest: 1, //boolean
         let nest = parseBoolean(row['Nest']);
 //         New: 0, //boolean
-        let new_pokemon = parseBoolean(row['New']);
+        let newPokemon = parseBoolean(row['New']);
 //         'Not-Gettable': 0, //boolean
-        let not_gettable = parseBoolean(row['Not-Gettable']);
+        let notGettable = parseBoolean(row['Not-Gettable']);
 //         'Future Evolve': 0, //boolean
-        let future_evolve = parseBoolean(row['Future Evolve']);
+        let futureEvolve = parseBoolean(row['Future Evolve']);
 
         return {
             name,
-            pokedex_number,
+            pokedexNumber,
             generation,
-            combat_points_at_lvl_39,
-            combat_points_at_lvl_40,
+            combatPointsAtLvl39Score,
+            combatPointsAtLvl40Score,
             hatchable,
             raidable,
             aquireable,
             legendary,
-            evolution_stage,
-            stamina_score,
-            defense_score,
-            attack_score,
-            family_kind,
+            evolutionStage,
+            staminaScore,
+            defenseScore,
+            attackScore,
+            totalScore,
+            familyKind,
             evolved,
-            cross_gen,
+            crossGen,
             spawns,
             regional,
             nest,
-            new_pokemon,
-            not_gettable,
-            future_evolve,
+            newPokemon,
+            notGettable,
+            futureEvolve,
             shiny
         }
-
     }
+
+    const processAssociation = async (transaction, data, dataValue, colTarget, assocationMoldel, optional = false) => {
+        if (optional && !dataValue) {
+            return data;
+        }
+
+
+        const [associationDataModel, created] = await assocationMoldel.findOrCreate({
+            where: { name: dataValue }, defaults: { name: dataValue },
+            transaction: transaction
+        });
+
+        if(!associationDataModel || !associationDataModel.id) {
+            throw new Error(`Fail to create association: ${colTarget} - ${dataValue}`);
+        }
+
+        data[colTarget] = associationDataModel.id;
+
+        return data;
+    }
+
 
     return {
         mapToModel: async function (row, transaction) {
-//         'Type 1': 'grass', //pokemon_type N:N
-//         'Type 2': 'poison', //pokemon_type N:N
-//         'Weather 1': 'Sunny/clear', //pokemon_environment N:N
-//         'Weather 2': 'Cloudy', //pokemon_environment N:N
+
 
             if (!row || !transaction) {
                 return false;
@@ -122,8 +142,15 @@ module.exports = ({ logger, db }) => {
             let data = mapRow(row);
             logger.debug(data);
 
+            // process association
+            data = await processAssociation(transaction, data, row['Type 1'], 'kindId', db.PokemonKind);
+            data = await processAssociation(transaction, data, row['Type 2'], 'secondaryKindId', db.PokemonKind, true);
+            data = await processAssociation(transaction, data, row['Weather 1'], 'weatherId', db.PokemonWeather);
+            data = await processAssociation(transaction, data, row['Weather 2'], 'secondaryWeatherId', db.PokemonWeather, true);
+
+
             let pokemon = await db.Pokemon.findOne({
-                where: { pokedex_number: data.pokedex_number },
+                where: { pokedexNumber: data.pokedexNumber, name: data.name },
                 transaction: transaction
             });
             if (pokemon) {
