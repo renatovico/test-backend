@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     PokemonKind.init({
-        name: DataTypes.STRING
+        name: DataTypes.STRING,
+        ts_name: DataTypes.TSVECTOR
     }, {
         sequelize,
         modelName: 'PokemonKind',

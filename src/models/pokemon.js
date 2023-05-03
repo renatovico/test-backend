@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         newPokemon: DataTypes.BOOLEAN,
         notGettable: DataTypes.BOOLEAN,
         futureEvolve: DataTypes.BOOLEAN,
+        ts_name: DataTypes.TSVECTOR
     }, {
         sequelize,
         modelName: 'Pokemon'

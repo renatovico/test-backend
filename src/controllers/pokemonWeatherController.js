@@ -7,7 +7,7 @@ module.exports = ({  db, logger }) => {
     const list = async ctx => {
         let pokemons = [];
         const searchTerm = ctx.query.name;
-        const HARD_LIMIT = 100;
+        const HARD_LIMIT = 10;
         let limit = parseInt(ctx.query.limit, 10);
         if (isNaN(limit) || limit < 1 || limit > HARD_LIMIT) {
             limit = HARD_LIMIT;
@@ -20,24 +20,20 @@ module.exports = ({  db, logger }) => {
 
         try {
             if (searchTerm) {
-                pokemons = await db.Pokemon.findAll({
+                pokemons = await db.PokemonWeather.findAll({
                     attributes: [
                         'id',
                         'name',
                         [db.Sequelize.literal(`ts_rank("ts_name", websearch_to_tsquery('english', :searchTerm), 1)`), 'rank']
                     ],
-                    where: {
-                        [db.Sequelize.Op.or]: [{name: {[db.Sequelize.Op.iLike]: db.Sequelize.literal(`:searchTermLike`) }},
-                            {ts_name: db.Sequelize.literal(`"ts_name" @@ websearch_to_tsquery('english', :searchTerm)`)},
-                        ]
-                    },
-                    replacements: { 'searchTerm': `${searchTerm}:*`, 'searchTermLike': `%${searchTerm}%` },
-                    order: db.Sequelize.literal(`"rank" DESC, "name" ASC`),
+                    where: db.Sequelize.literal(`"ts_name" @@ websearch_to_tsquery('english', :searchTerm)`),
+                    replacements: { searchTerm: `${searchTerm}:*` },
+                    order: db.Sequelize.literal(`"rank" DESC`),
                     limit: limit_query,
                     offset: offset
                 });
             } else {
-                pokemons = await db.Pokemon.findAll({
+                pokemons = await db.PokemonWeather.findAll({
                     attributes: [
                         'id',
                         'name',

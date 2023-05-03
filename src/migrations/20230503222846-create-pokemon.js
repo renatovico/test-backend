@@ -2,6 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
+
         await queryInterface.createTable('Pokemons', {
             id: {
                 allowNull: false,
@@ -160,6 +161,24 @@ module.exports = {
             fields: ['name', 'pokedexNumber'],
             name: 'unique_pokemon_name_number_constraint'
         });
+
+        await queryInterface.addColumn('Pokemons', 'ts_name', {
+            type: Sequelize.DataTypes.TSVECTOR
+        });
+
+        // Create trigger to update ts_name column whenever name column is updated
+        await queryInterface.sequelize.query(`
+      CREATE TRIGGER pokemon_tsvector_update
+      BEFORE INSERT OR UPDATE ON "Pokemons"
+      FOR EACH ROW EXECUTE FUNCTION tsvector_update_trigger(ts_name, 'pg_catalog.english', name);`);
+
+        // Create index on ts_name column
+        await queryInterface.addIndex('Pokemons', {
+            fields: [Sequelize.literal('ts_name')],
+            using: 'gin',
+            name: 'pokemon_ts_name_idx'
+        });
+
     },
     async down(queryInterface, Sequelize) {
         await queryInterface.dropTable('Pokemons');

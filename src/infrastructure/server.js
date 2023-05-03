@@ -14,7 +14,13 @@ module.exports = ({ logger, router }) => {
 
     const logMessage = async (ctx, next) => {
         const start = Date.now();
-        await next();
+        try {
+            await next();
+        } catch(err) {
+            logger.error(`Fatal Error: - ${err} - ${err.stack}`);
+            ctx.status = 501;
+            ctx.body = "Fatal Interner Error";
+        }
         const ms = Date.now() - start;
         const message = `${ctx.method} ${ctx.url} - ${ms}ms - ${ctx.status}`;
 

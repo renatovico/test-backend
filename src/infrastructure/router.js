@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 
-module.exports = ({ healthcheckController, pokemonController }) => {
+module.exports = ({ healthcheckController, pokemonController, pokemonWeatherController, pokemonKindController }) => {
     const router = new Router();
 
 
@@ -12,6 +12,8 @@ module.exports = ({ healthcheckController, pokemonController }) => {
 
     // Pokemon Controller
     router.get('/pokemons', pokemonController.list);
+    router.get('/pokemon_weathers', pokemonWeatherController.list);
+    router.get('/pokemon_kinds', pokemonKindController.list);
 
     return router;
 };

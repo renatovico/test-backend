@@ -8,6 +8,8 @@ const serverBuilder = require('./server');
 
 const healthcheckControllerBuilder = require('../controllers/healthcheckController');
 const pokemonControllerBuilder = require('../controllers/pokemonController');
+const pokemonWeatherControllerBuilder = require('../controllers/pokemonWeatherController');
+const pokemonKindControllerBuilder = require('../controllers/pokemonKindController');
 
 const loggerBuilder = require('./logger');
 const router = require('./router');
@@ -23,6 +25,8 @@ const container = createContainer().register({
     router: asFunction(router).singleton(),
     healthcheckController: asFunction(healthcheckControllerBuilder).singleton(),
     pokemonController: asFunction(pokemonControllerBuilder).singleton(),
+    pokemonWeatherController: asFunction(pokemonWeatherControllerBuilder).singleton(),
+    pokemonKindController: asFunction(pokemonKindControllerBuilder).singleton(),
 
     db: asFunction(dbBuilder).singleton()
 });
